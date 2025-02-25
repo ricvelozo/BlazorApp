@@ -1,0 +1,20 @@
+volumes:
+  db-data:
+  db-log:
+  db-secrets:
+services:
+  db:
+    image: mcr.microsoft.com/mssql/server
+    user: root
+    restart: on-failure:3
+    environment:
+      ACCEPT_EULA: Y
+      MSSQL_SA_PASSWORD: p@ssword1234
+      MSSQL_COLLATION: SQL_Latin1_General_CP1_CI_AS_UTF8
+      MSSQL_PID: Developer
+    ports:
+      - "1433:1433"
+    volumes:
+      - db-data:/var/opt/mssql/data
+      - db-log:/var/opt/mssql/log
+      - db-secrets:/var/opt/mssql/secrets
