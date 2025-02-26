@@ -22,23 +22,37 @@ namespace API.Controllers
         [Route("")]
         public async Task<IEnumerable<User>> Index()
         {
-            var users = await _userRepository.GetAllUsers();
+            var users = await _userRepository.GetAll();
 
             return users;
         }
 
         [HttpGet]
         [Route("{id}")]
-        public async Task<ActionResult<User>> GetUserById(int id)
+        public async Task<ActionResult<User>> GetById(int id)
         {
-            var user = await _userRepository.GetUserById(id);
+            var user = await _userRepository.GetById(id);
             if (user is null)
             {
-                _logger.LogDebug("Inexistent User Id.");
+                _logger.LogDebug("Invalid user ID.");
                 return NotFound();
             }
 
             return Ok(user);
+        }
+
+        [HttpPost]
+        [Route("register")]
+        public async Task<ActionResult<User>> Register([FromBody] RegisterUser user)
+        {
+            var newUser = await _userRepository.Register(user);
+            if (newUser is null)
+            {
+                _logger.LogDebug("Can't save user.");
+                return BadRequest();
+            }
+
+            return Ok(newUser);
         }
     }
 }

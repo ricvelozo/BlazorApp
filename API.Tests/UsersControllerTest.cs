@@ -21,22 +21,20 @@ namespace API.Tests
                 {
                     Id = 1,
                     Username = "admin",
-                    Password = new byte[] { 0, 1, 2, 3, 4 },
                 },
                 new User
                 {
                     Id = 2,
                     Username = "ricardo",
-                    Password = new byte[] { 0, 1, 2, 3, 4 },
                 },
             };
         }
 
         [Fact]
-        public async Task TestGetAllUsers()
+        public async Task TestGetAll()
         {
             var mockRepository = new Mock<IUserRepository>();
-            mockRepository.Setup(repo => repo.GetAllUsers()).Returns(Task.FromResult((IEnumerable<User>)users));
+            mockRepository.Setup(repo => repo.GetAll()).Returns(Task.FromResult((IEnumerable<User>)users));
 
             var service = new UsersController(loggerService.Object, mockRepository.Object);
             var usersFound = await service.Index();
@@ -45,15 +43,27 @@ namespace API.Tests
         }
 
         [Fact]
-        public async Task TestGetUserById()
+        public async Task TestGetById()
         {
             var mockRepository = new Mock<IUserRepository>();
-            mockRepository.Setup(repo => repo.GetUserById(1)).Returns(Task.FromResult((User?)users[1]));
+            mockRepository.Setup(repo => repo.GetById(1)).Returns(Task.FromResult((User?)users[1]));
 
             var service = new UsersController(loggerService.Object, mockRepository.Object);
-            var userFound = await service.GetUserById(1);
+            var userFound = await service.GetById(1);
 
             Assert.Equal(userFound.Value, (User?)users[1]);
+        }
+
+        [Fact]
+        public async Task TestRegister()
+        {
+            var mockRepository = new Mock<IUserRepository>();
+            mockRepository.Setup(repo => repo.GetById(1)).Returns(Task.FromResult((User?)users[1]));
+
+            var service = new UsersController(loggerService.Object, mockRepository.Object);
+            var newUser = await service.Register(new RegisterUser { Username = "admin", Password = "1234" });
+
+            Assert.Equal(newUser.Value, (User?)users[1]);
         }
     }
 }
