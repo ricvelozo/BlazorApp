@@ -1,0 +1,57 @@
+﻿@page "/usuários"
+@rendermode InteractiveServer
+@using System.Text.Json
+@using System.Text.Json.Serialization
+@using API.Models
+@inject HttpClient Client
+
+<PageTitle>Usuários</PageTitle>
+
+<h1>Usuários</h1>
+
+@if (getUsersError || users is null)
+{
+    <p>Não foi possível consultar os usuários registrados.</p>
+}
+else
+{
+    <ul>
+        @foreach (var user in users)
+        {
+            <li>@user.Username (registrado em: @user.CreatedAt.ToString("dd/MM/yyyy"))</li>
+        }
+    </ul>
+}
+
+@code {
+    private IEnumerable<User>? users = [];
+    private bool getUsersError;
+    private bool shouldRender;
+
+    protected override bool ShouldRender() => shouldRender;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var request = new HttpRequestMessage(HttpMethod.Get, "/api/users");
+        request.Headers.Add("Accept", "application/json");
+
+        var response = await Client.SendAsync(request);
+
+        if (response.IsSuccessStatusCode)
+        {
+            using var responseStream = await response.Content.ReadAsStreamAsync();
+
+            var options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            };
+            users = await JsonSerializer.DeserializeAsync<IEnumerable<User>>(responseStream, options);
+        }
+        else
+        {
+            getUsersError = true;
+        }
+
+        shouldRender = true;
+    }
+}
