@@ -17,7 +17,12 @@ namespace API.Repositories
 
         protected SqlConnection GetConnection()
         {
-            return new SqlConnection(_configuration.GetConnectionString("DefaultConnection"));
+            var builder = new SqlConnectionStringBuilder(
+                _configuration.GetConnectionString("DefaultConnection")
+            );
+            builder.Password = _configuration["DbPassword"];
+
+            return new SqlConnection(builder.ConnectionString);
         }
     }
 }
