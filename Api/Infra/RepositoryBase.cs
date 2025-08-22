@@ -1,10 +1,9 @@
-﻿using API.Models;
-using Dapper;
+﻿using Dapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Data.SqlClient;
 using System.Text;
 
-namespace API.Repositories
+namespace Api.Infra
 {
     public abstract class RepositoryBase
     {

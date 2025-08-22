@@ -1,6 +1,6 @@
-﻿using API.Models;
+﻿using Api.Domain.Users;
 
-namespace API.Repositories
+namespace Api.Domain.Users
 {
     public interface IUserRepository
     {
@@ -8,6 +8,6 @@ namespace API.Repositories
 
         public Task<User?> GetById(int id);
 
-        public Task<User?> Register(RegisterUser user);
+        public Task<User?> Register(RegisterUserDto user);
     }
 }

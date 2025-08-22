@@ -1,8 +1,7 @@
-﻿using API.Models;
-using API.Repositories;
+﻿using Api.Domain.Users;
 using Microsoft.AspNetCore.Mvc;
 
-namespace API.Controllers
+namespace Api.Api
 {
     [ApiController]
     [Route("api/[controller]")]
@@ -43,7 +42,7 @@ namespace API.Controllers
 
         [HttpPost]
         [Route("register")]
-        public async Task<ActionResult<User>> Register([FromBody] RegisterUser user)
+        public async Task<ActionResult<User>> Register([FromBody] RegisterUserDto user)
         {
             var newUser = await _userRepository.Register(user);
             if (newUser is null)

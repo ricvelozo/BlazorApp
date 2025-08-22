@@ -1,10 +1,10 @@
-﻿using API.Models;
+﻿using Api.Domain.Users;
 using Dapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Data.SqlClient;
 using System.Text;
 
-namespace API.Repositories
+namespace Api.Infra
 {
     public class UserRepository : RepositoryBase, IUserRepository
     {
@@ -25,13 +25,13 @@ namespace API.Repositories
 
         }
 
-        public async Task<User?> Register(RegisterUser user)
+        public async Task<User?> Register(RegisterUserDto user)
         {
             using var connection = GetConnection();
 
             try
             {
-                var hasher = new PasswordHasher<RegisterUser>();
+                var hasher = new PasswordHasher<RegisterUserDto>();
                 var id = await connection.QuerySingleAsync<int>("INSERT INTO [dbo].[Users] (Username, Password) VALUES (@Username, @Password); SELECT SCOPE_IDENTITY()", new
                 {
                     user.Username,

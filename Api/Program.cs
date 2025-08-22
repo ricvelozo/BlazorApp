@@ -1,4 +1,5 @@
-using API.Repositories;
+using Api.Domain.Users;
+using Api.Infra;
 using Serilog;
 using Serilog.Events;
 
