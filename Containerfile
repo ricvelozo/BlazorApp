@@ -4,7 +4,7 @@ WORKDIR /usr/src/app
 
 COPY . .
 RUN --mount=type=cache,target=/root/.nuget/packages dotnet restore
-RUN --mount=type=cache,target=/root/.nuget/packages dotnet publish -o out
+RUN --mount=type=cache,target=/root/.nuget/packages dotnet publish API -o out --no-restore
 
 FROM mcr.microsoft.com/dotnet/aspnet:9.0@sha256:b4bea3a52a0a77317fa93c5bbdb076623f81e3e2f201078d89914da71318b5d8
 
@@ -14,4 +14,4 @@ RUN rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /usr/src/app/out .
 
-ENTRYPOINT ["dotnet", "Api.dll"]
+ENTRYPOINT ["dotnet", "API.dll"]

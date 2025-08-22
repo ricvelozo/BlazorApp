@@ -10,12 +10,10 @@ services:
     profiles: [api]
     restart: on-failure:3
     environment:
-      DB_HOST: db
-      DB_DATABASE: ${DB_DATABASE}
-      DB_USERNAME: ${DB_USERNAME}
+      DOTNET_ENVIRONMENT: Container
       DB_PASSWORD: ${DB_PASSWORD}
     ports:
-      - "5172:5172"
+      - "8000:8080"
     volumes:
       - .:/usr/src/app:z
     depends_on:

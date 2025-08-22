@@ -20,7 +20,7 @@ namespace API.Repositories
             var builder = new SqlConnectionStringBuilder(
                 _configuration.GetConnectionString("DefaultConnection")
             );
-            builder.Password = _configuration["DbPassword"];
+            builder.Password = _configuration["DB_PASSWORD"];
 
             return new SqlConnection(builder.ConnectionString);
         }
