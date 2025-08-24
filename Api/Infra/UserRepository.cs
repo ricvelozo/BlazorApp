@@ -1,4 +1,5 @@
-﻿using Api.Domain.Users;
+﻿using Api.Api.Auth;
+using Api.Domain.Users;
 using Dapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Data.SqlClient;
@@ -22,16 +23,15 @@ namespace Api.Infra
             using var connection = GetConnection();
 
             return await connection.QueryFirstOrDefaultAsync<User>("SELECT * FROM [dbo].[Users] WHERE [Id] = @Id", new { Id = id });
-
         }
 
-        public async Task<User?> Register(RegisterUserDto user)
+        public async Task<User?> Create(UserCredentialsDto user)
         {
             using var connection = GetConnection();
 
             try
             {
-                var hasher = new PasswordHasher<RegisterUserDto>();
+                var hasher = new PasswordHasher<UserCredentialsDto>();
                 var id = await connection.QuerySingleAsync<int>("INSERT INTO [dbo].[Users] (Username, Password) VALUES (@Username, @Password); SELECT SCOPE_IDENTITY()", new
                 {
                     user.Username,

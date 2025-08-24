@@ -1,4 +1,5 @@
-﻿using Api.Domain.Users;
+﻿using Api.Api.Auth;
+using Api.Domain.Users;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Api
@@ -42,9 +43,9 @@ namespace Api.Api
 
         [HttpPost]
         [Route("register")]
-        public async Task<ActionResult<User>> Register([FromBody] RegisterUserDto user)
+        public async Task<ActionResult<User>> Create([FromBody] UserCredentialsDto user)
         {
-            var newUser = await _userRepository.Register(user);
+            var newUser = await _userRepository.Create(user);
             if (newUser is null)
             {
                 _logger.LogDebug("Can't save user.");

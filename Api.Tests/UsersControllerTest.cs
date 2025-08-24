@@ -1,10 +1,12 @@
-﻿using API.Controllers;
-using API.Models;
-using API.Repositories;
+﻿using Api.Api;
+using Api.Api.Auth;
+using Api.Domain.Users;
+using Api.Infra;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 
-namespace API.Tests
+namespace Api.Tests
 {
     public class UsersControllerTest
     {
@@ -39,31 +41,33 @@ namespace API.Tests
             var service = new UsersController(loggerService.Object, mockRepository.Object);
             var usersFound = await service.Index();
 
-            Assert.Equal(usersFound, users);
+            Assert.Equal(users, usersFound);
         }
 
         [Fact]
         public async Task TestGetById()
         {
             var mockRepository = new Mock<IUserRepository>();
-            mockRepository.Setup(repo => repo.GetById(1)).Returns(Task.FromResult((User?)users[1]));
+            mockRepository.Setup(repo => repo.GetById(2)).Returns(Task.FromResult((User?)users[1]));
 
             var service = new UsersController(loggerService.Object, mockRepository.Object);
-            var userFound = await service.GetById(1);
+            var userFound = (await service.GetById(2)).Result as OkObjectResult;
 
-            Assert.Equal(userFound.Value, (User?)users[1]);
+            Assert.Equal((User?)users[1], userFound.Value);
         }
 
         [Fact]
-        public async Task TestRegister()
+        public async Task TestCreate()
         {
+            var credentials = new UserCredentialsDto { Username = "admin", Password = "1234" };
+
             var mockRepository = new Mock<IUserRepository>();
-            mockRepository.Setup(repo => repo.GetById(1)).Returns(Task.FromResult((User?)users[1]));
+            mockRepository.Setup(repo => repo.Create(credentials)).Returns(Task.FromResult((User?)users[0]));
 
             var service = new UsersController(loggerService.Object, mockRepository.Object);
-            var newUser = await service.Register(new RegisterUser { Username = "admin", Password = "1234" });
+            var newUser = (await service.Create(credentials)).Result as OkObjectResult;
 
-            Assert.Equal(newUser.Value, (User?)users[1]);
+            Assert.Equal((User?)users[0], newUser.Value);
         }
     }
 }

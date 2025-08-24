@@ -1,6 +1,6 @@
-﻿namespace Api.Domain.Users
+﻿namespace Api.Api.Auth
 {
-    public class RegisterUserDto
+    public class UserCredentialsDto
     {
         public required String Username { get; set; }
         public required String Password { get; set; }

@@ -1,4 +1,5 @@
-﻿using Api.Domain.Users;
+﻿using Api.Api.Auth;
+using Api.Domain.Users;
 
 namespace Api.Domain.Users
 {
@@ -8,6 +9,6 @@ namespace Api.Domain.Users
 
         public Task<User?> GetById(int id);
 
-        public Task<User?> Register(RegisterUserDto user);
+        public Task<User?> Create(UserCredentialsDto user);
     }
 }

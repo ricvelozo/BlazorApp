@@ -4,6 +4,7 @@ WORKDIR /usr/src/app
 
 COPY . .
 RUN --mount=type=cache,target=/root/.nuget/packages dotnet restore
+# RUN --mount=type=cache,target=/root/.nuget/packages dotnet test Api.Tests
 RUN --mount=type=cache,target=/root/.nuget/packages dotnet publish Api -o out
 
 FROM mcr.microsoft.com/dotnet/aspnet:9.0@sha256:b4bea3a52a0a77317fa93c5bbdb076623f81e3e2f201078d89914da71318b5d8
