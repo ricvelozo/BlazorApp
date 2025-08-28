@@ -1,7 +1,7 @@
-using Api.Domain.Users;
-using Api.Infra;
 using Serilog;
 using Serilog.Events;
+using SimpleServer.Domain.Users;
+using SimpleServer.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 

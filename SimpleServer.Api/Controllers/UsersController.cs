@@ -1,22 +1,15 @@
-﻿using Api.Api.Auth;
-using Api.Domain.Users;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using SimpleServer.Domain.Users;
 
-namespace Api.Api
+namespace SimpleServer.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class UsersController : ControllerBase
+    public class UsersController(ILogger<UsersController> logger, IUserRepository userRepository) : ControllerBase
     {
-        private readonly ILogger<UsersController> _logger;
+        private readonly ILogger<UsersController> _logger = logger;
 
-        private readonly IUserRepository _userRepository;
-
-        public UsersController(ILogger<UsersController> logger, IUserRepository userRepository)
-        {
-            _logger = logger;
-            _userRepository = userRepository;
-        }
+        private readonly IUserRepository _userRepository = userRepository;
 
         [HttpGet]
         [Route("")]
@@ -43,7 +36,7 @@ namespace Api.Api
 
         [HttpPost]
         [Route("register")]
-        public async Task<ActionResult<User>> Create([FromBody] UserCredentialsDto user)
+        public async Task<ActionResult<User>> Create([FromBody] UserCredentials user)
         {
             var newUser = await _userRepository.Create(user);
             if (newUser is null)

@@ -1,16 +1,14 @@
-﻿using Api.Api.Auth;
-using Api.Domain.Users;
-using Dapper;
+﻿using Dapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
+using SimpleServer.Domain.Users;
 using System.Text;
 
-namespace Api.Infra
+namespace SimpleServer.Infrastructure
 {
-    public class UserRepository : RepositoryBase, IUserRepository
+    public class UserRepository(IConfiguration configuration) : RepositoryBase(configuration), IUserRepository
     {
-        public UserRepository(IConfiguration configuration) : base(configuration) { }
-
         public async Task<IEnumerable<User>> GetAll()
         {
             using var connection = GetConnection();
@@ -25,13 +23,13 @@ namespace Api.Infra
             return await connection.QueryFirstOrDefaultAsync<User>("SELECT * FROM [dbo].[Users] WHERE [Id] = @Id", new { Id = id });
         }
 
-        public async Task<User?> Create(UserCredentialsDto user)
+        public async Task<User?> Create(UserCredentials user)
         {
             using var connection = GetConnection();
 
             try
             {
-                var hasher = new PasswordHasher<UserCredentialsDto>();
+                var hasher = new PasswordHasher<UserCredentials>();
                 var id = await connection.QuerySingleAsync<int>("INSERT INTO [dbo].[Users] (Username, Password) VALUES (@Username, @Password); SELECT SCOPE_IDENTITY()", new
                 {
                     user.Username,
